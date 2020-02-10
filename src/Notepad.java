@@ -40,9 +40,13 @@ public class Notepad extends Application {
         HBox mainPlank = new HBox(mainButtons.get(0), mainButtons.get(1),
                 mainButtons.get(2), mainButtons.get(3), mainButtons.get(4));
         mainPlank.setStyle("-fx-background-color: #ffffff");
+        mainButtons.checkMouseHolding();
         TextArea mainArea = new TextArea();
         mainArea.setPrefColumnCount(40);
         mainArea.setPrefRowCount(40);
+        mainArea.setStyle("-fx-background-insets: 0; -fx-background-radius: 0;" +
+                "-fx-faint-focus-color: -fx-control-inner-background; -fx-focus-color: -fx-control-inner-background;" +
+                "-fx-box-border: none; -fx-text-box-border: none; -fx-border-width: -5; -fx-border-insets: 0; ");
         VBox almostScene = new VBox(mainPlank, mainArea);
         Scene primaryScene = new Scene(almostScene);
 
