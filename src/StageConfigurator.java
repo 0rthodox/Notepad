@@ -1,5 +1,8 @@
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -19,15 +22,10 @@ class StageConfigurator {
 
         MainMenu mainMenu = new MainMenu();
 
-        VBox vBox = new VBox(mainMenu.getMenuBar(), mainMenu.getTextArea());
-
-        Scene primaryScene = new Scene(vBox);
-
-        stage.setScene(primaryScene);
+        stage.setScene(mainMenu.getPrimaryScene());
 
 
-        stage.setTitle((mainMenu.getCurrentFile() == null ?
-                "Безымянный" : mainMenu.getCurrentFile().toString()) + " – Блокнот");
+        stage.setTitle(mainMenu.getTitle() + " – Блокнот");
 
     }
 }

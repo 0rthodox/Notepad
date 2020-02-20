@@ -8,7 +8,7 @@ import java.util.List;
 import static java.lang.System.lineSeparator;
 
 public class FileManager {
-    public static void save(Path currentPath, String text) {
+    public static Path save(Path currentPath, String text) {
         text = text.replaceAll("\n", lineSeparator());
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Txt files", "*.txt");
@@ -20,6 +20,7 @@ public class FileManager {
             throw new UncheckedIOException(ioEx);
         }
         NotepadPlus.getPrimaryStage().setTitle(currentPath.getFileName().toString() + " - Блокнот");
+        return currentPath;
     }
     public static void open(Path currentPath) {
         FileChooser fileChooser = new FileChooser();

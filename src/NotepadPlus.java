@@ -19,6 +19,7 @@ public class NotepadPlus extends Application {
     }
 
     private static Stage primaryStage;
+    //TODO: private static Stage popUpStage;
 
     @Override
     public void start(Stage stage) {

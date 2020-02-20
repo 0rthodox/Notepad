@@ -1,11 +1,7 @@
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -53,12 +49,23 @@ class MainMenu {
 
     private MenuBar menuBar;
 
+    private VBox vBox;
+
+    private Scene primaryScene;
+
     private Path currentFile = null;
     private Path currentDirectory = null;
+    private String title = "Безымянный";
+
 
     MainMenu() {
         create.setOnAction(event -> {
-            FileManager.save(currentFile, textArea.getText());
+            if (!textArea.getText().isEmpty()) {
+                SubsidiaryStage subStage = new SubsidiaryStage(currentFile, textArea);
+                if(textArea.getText().isEmpty())
+                    currentFile = null;
+                    title = "Безымянный";
+            }
         });
         saveAs.setOnAction(event -> {
             FileManager.save(currentFile, textArea.getText());
@@ -104,15 +111,23 @@ class MainMenu {
         help.getItems().add(aboutProgram);
 
         menuBar = new MenuBar(file, edit, format, view, help);
+
+        vBox = new VBox(menuBar, textArea);
+
+        VBox.setVgrow(textArea, Priority.ALWAYS);
+
+        primaryScene = new Scene(vBox);
     }
 
-    public MenuBar getMenuBar() {
-        return menuBar;
-    }
-    public TextArea getTextArea() {
-        return textArea;
-    }
     public Path getCurrentFile() {
         return currentFile;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Scene getPrimaryScene() {
+        return primaryScene;
     }
 }

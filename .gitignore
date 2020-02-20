@@ -1,2 +1,4 @@
 
 *.class
+
+out/production/Notepad/META-INF/Notepad.kotlin_module
