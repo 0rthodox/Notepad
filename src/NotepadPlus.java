@@ -13,36 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotepadPlus extends Application {
-    private String currentFileName = "Безымянный";
 
-    public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return primaryStage;
     }
 
-    private Stage primaryStage;
+    private static Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle(currentFileName + " – Блокнот");
-        try {
-            FileInputStream inputImageStream = new FileInputStream("resources/np.png");
-            Image iImage = new Image(inputImageStream);
-            primaryStage.getIcons().add(iImage);
+    public void start(Stage stage) {
+        primaryStage = stage;
+        StageConfigurator.configureStage(stage);
 
-        } catch (FileNotFoundException noImage) {
-            throw new IllegalArgumentException("No such image");
-        }
-
-        MainField mainField = new MainField();
-        MainMenu mainMenu = new MainMenu();
-
-        VBox vBox = new VBox(mainMenu.getMenuBar(), mainField.getTextArea());
-
-        Scene primaryScene = new Scene(vBox);
-
-        primaryStage.setScene(primaryScene);
-
-        primaryStage.show();
+        stage.show();
     }
 
 }
