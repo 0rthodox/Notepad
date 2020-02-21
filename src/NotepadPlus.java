@@ -40,7 +40,6 @@ public class NotepadPlus extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
         StageConfigurator.configureStage(stage);
-
         stage.show();
     }
 

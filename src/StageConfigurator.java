@@ -24,7 +24,6 @@ class StageConfigurator {
 
         stage.setScene(mainMenu.getPrimaryScene());
 
-
         stage.setTitle(mainMenu.getTitle() + " – Блокнот");
 
     }

@@ -23,23 +23,11 @@ class MainMenu {
     private MenuItem open = new MenuItem("Открыть..");
     private MenuItem save = new MenuItem("Сохранить");
     private MenuItem saveAs = new MenuItem("Сохранить как..");
-    private MenuItem pageParams = new MenuItem("Параметры страницы..");
-    private MenuItem print = new MenuItem("Печать..");
+    //private MenuItem pageParams = new MenuItem("Параметры страницы..");
+    //private MenuItem print = new MenuItem("Печать..");
     private MenuItem exit = new MenuItem("Выход");
 
-    private MenuItem undo = new MenuItem("Отменить");
-    private MenuItem cut = new MenuItem("Вырезать");
-    private MenuItem copy = new MenuItem("Копировать");
-    private MenuItem paste = new MenuItem("Вставить");
-    private MenuItem delete = new MenuItem("Удалить");
-    private MenuItem find = new MenuItem("Найти");
-    private MenuItem findFurther = new MenuItem("Найти далее");
-    private MenuItem replace = new MenuItem("Заменить");
-    private MenuItem move = new MenuItem("Перейти");
-    private MenuItem highlightAll = new MenuItem("Выделить всё");
-    private MenuItem timeStamp = new MenuItem("Время и дата");
-
-    private MenuItem hyphenation = new CheckMenuItem("Перенос по словам");
+    //private MenuItem hyphenation = new CheckMenuItem("Перенос по словам");
     private MenuItem font = new MenuItem("Шрифт..");
 
     private MenuItem conditionString = new MenuItem("Строка состояния");
