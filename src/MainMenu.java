@@ -53,41 +53,41 @@ class MainMenu {
 
     private Scene primaryScene;
 
-    private Path currentFile = null;
+    private static Path currentFile = null;
     private Path currentDirectory = null;
-    private String title = "Безымянный";
+    private static String title = "Безымянный";
 
 
     MainMenu() {
         create.setOnAction(event -> {
             if (!textArea.getText().isEmpty()) {
-                SubsidiaryStage subStage = new SubsidiaryStage(currentFile, textArea);
-                if(textArea.getText().isEmpty())
-                    currentFile = null;
-                    title = "Безымянный";
+                NotepadPlus.showPopUpStage(PopUpStage.constructPopUpStage(currentFile, textArea));
             }
         });
-        saveAs.setOnAction(event -> {
-            FileManager.save(currentFile, textArea.getText());
+        saveAs.setOnAction(event -> FileManager.saveToNew(textArea.getText()));
+        save.setOnAction(event -> {
+            if (currentFile == null) {
+                FileManager.saveToNew(textArea.getText());
+            } else {
+                FileManager.saveToExisting(currentFile, textArea.getText());
+            }
         });
         open.setOnAction(event -> {
-            FileManager.open(currentFile);
+            currentFile = FileManager.open();
             List<String> fileContents = FileManager.readPath(currentFile);
             for (String line : fileContents) {
                 textArea.appendText(line + lineSeparator());
             }
         });
 
-        exit.setOnAction(event -> {
-            NotepadPlus.getPrimaryStage().close();
-        });
+        exit.setOnAction(event -> NotepadPlus.terminate());
 
         file.getItems().add(create);
         file.getItems().add(open);
         file.getItems().add(save);
         file.getItems().add(saveAs);
-        file.getItems().add(pageParams);
-        file.getItems().add(print);
+        //file.getItems().add(pageParams);
+        //file.getItems().add(print);
         file.getItems().add(exit);
 
         edit.getItems().add(undo);
@@ -129,5 +129,14 @@ class MainMenu {
 
     public Scene getPrimaryScene() {
         return primaryScene;
+    }
+
+    static void resetPath() {
+        currentFile = null;
+        title = "Безымянный";
+        syncronizeStage();
+    }
+    static void syncronizeStage() {
+        NotepadPlus.updateStageTitle(title + " — Блокнот");
     }
 }

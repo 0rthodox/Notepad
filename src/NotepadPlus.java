@@ -5,6 +5,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -14,12 +15,26 @@ import java.util.List;
 
 public class NotepadPlus extends Application {
 
-    public static Stage getPrimaryStage() {
+    static Stage getPrimaryStage() {
         return primaryStage;
     }
 
+    public static void showPopUpStage(Stage popUpStage) {
+        NotepadPlus.popUpStage = popUpStage;
+        popUpStage.initModality(Modality.APPLICATION_MODAL);
+        NotepadPlus.popUpStage.show();
+    }
+
+    static void updateStageTitle(String name) {
+        primaryStage.setTitle(name);
+    }
+
+    static void terminate() {
+        primaryStage.close();
+    }
+
     private static Stage primaryStage;
-    //TODO: private static Stage popUpStage;
+    private static Stage popUpStage;
 
     @Override
     public void start(Stage stage) {

@@ -1,26 +1,21 @@
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.nio.file.Path;
 
-public class SubsidiaryStage {
+public class PopUpStage {
 
     private static final int paddingAndSpacing = 10;
 
-    Stage stage;
-
-    public SubsidiaryStage(Path filePath, TextArea textArea) {
-        stage = new Stage();
+    public static Stage constructPopUpStage(Path filePath, TextArea textArea) {
+        Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         String fileName;
         if (filePath == null) {
@@ -36,13 +31,15 @@ public class SubsidiaryStage {
         Button dismiss = new Button("Отмена");
 
         save.setOnAction(event -> {
-            FileManager.save(filePath, textArea.getText());
+            FileManager.saveToNew(textArea.getText());
             textArea.clear();
             stage.close();
+            MainMenu.resetPath();
         });
         notSave.setOnAction(event -> {
             textArea.clear();
             stage.close();
+            MainMenu.resetPath();
         });
         dismiss.setOnAction(event -> {
             stage.close();
@@ -54,9 +51,8 @@ public class SubsidiaryStage {
         vBox.setPadding(new Insets(paddingAndSpacing));
         vBox.setSpacing(paddingAndSpacing);
         Scene scene = new Scene(vBox);
-        stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Блокнот");
-        stage.show();
+        return stage;
     }
 }

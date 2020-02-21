@@ -8,24 +8,28 @@ import java.util.List;
 import static java.lang.System.lineSeparator;
 
 public class FileManager {
-    public static Path save(Path currentPath, String text) {
+    public static Path saveToNew(String text) {
         text = text.replaceAll("\n", lineSeparator());
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Txt files", "*.txt");
         fileChooser.getExtensionFilters().add(extensionFilter);
-        currentPath = fileChooser.showSaveDialog(NotepadPlus.getPrimaryStage()).toPath();
-        try (BufferedWriter ostream = new BufferedWriter(new FileWriter(currentPath.toFile()))){
+        Path currentPath = fileChooser.showSaveDialog(NotepadPlus.getPrimaryStage()).toPath();
+        saveToExisting(currentPath, text);
+        NotepadPlus.updateStageTitle(currentPath.getFileName().toString() + " - Блокнот");
+        return currentPath;
+    }
+    public static void saveToExisting(Path path, String text) {
+        try (BufferedWriter ostream = new BufferedWriter(new FileWriter(path.toFile()))){
             ostream.write(text);
         } catch (IOException ioEx) {
             throw new UncheckedIOException(ioEx);
         }
-        NotepadPlus.getPrimaryStage().setTitle(currentPath.getFileName().toString() + " - Блокнот");
-        return currentPath;
     }
-    public static void open(Path currentPath) {
+    public static Path open() {
         FileChooser fileChooser = new FileChooser();
-        currentPath = fileChooser.showOpenDialog(NotepadPlus.getPrimaryStage()).toPath();
-        NotepadPlus.getPrimaryStage().setTitle(currentPath.getFileName().toString() + " - Блокнот");
+        Path currentPath = fileChooser.showOpenDialog(NotepadPlus.getPrimaryStage()).toPath();
+        NotepadPlus.updateStageTitle(currentPath.getFileName().toString() + " - Блокнот");
+        return currentPath;
     }
 
     public static List<String> readPath(Path currentPath) {
