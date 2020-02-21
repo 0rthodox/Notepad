@@ -9,7 +9,9 @@ import static java.lang.System.lineSeparator;
 
 class MainMenu {
 
-    private TextArea textArea = new TextArea();
+    TextManager textManager = new TextManager();
+
+    private TextArea textArea = textManager.getTextArea();
 
     private Menu file = new Menu("Файл");
     private Menu edit = new Menu("Правка");
@@ -54,9 +56,7 @@ class MainMenu {
     private Scene primaryScene;
 
     private static Path currentFile = null;
-    private Path currentDirectory = null;
     private static String title = "Безымянный";
-
 
     MainMenu() {
         create.setOnAction(event -> {
@@ -64,19 +64,20 @@ class MainMenu {
                 NotepadPlus.showPopUpStage(PopUpStage.constructPopUpStage(currentFile, textArea));
             }
         });
-        saveAs.setOnAction(event -> FileManager.saveToNew(textArea.getText()));
+        saveAs.setOnAction(event -> FileManager.saveToNew(textManager.getText()));
         save.setOnAction(event -> {
             if (currentFile == null) {
-                FileManager.saveToNew(textArea.getText());
+                currentFile = FileManager.saveToNew(textManager.getText());
+                syncronizeStage();
             } else {
-                FileManager.saveToExisting(currentFile, textArea.getText());
+                FileManager.saveToExisting(currentFile, textManager.getText());
             }
         });
         open.setOnAction(event -> {
             currentFile = FileManager.open();
             List<String> fileContents = FileManager.readPath(currentFile);
             for (String line : fileContents) {
-                textArea.appendText(line + lineSeparator());
+                textManager.getTextArea().appendText(line + lineSeparator());
             }
         });
 
@@ -90,19 +91,7 @@ class MainMenu {
         //file.getItems().add(print);
         file.getItems().add(exit);
 
-        edit.getItems().add(undo);
-        edit.getItems().add(cut);
-        edit.getItems().add(copy);
-        edit.getItems().add(paste);
-        edit.getItems().add(delete);
-        edit.getItems().add(find);
-        edit.getItems().add(findFurther);
-        edit.getItems().add(replace);
-        edit.getItems().add(move);
-        edit.getItems().add(highlightAll);
-        edit.getItems().add(timeStamp);
-
-        format.getItems().add(hyphenation);
+        //format.getItems().add(hyphenation);
         format.getItems().add(font);
 
         view.getItems().add(conditionString);
@@ -110,11 +99,11 @@ class MainMenu {
         help.getItems().add(viewHelp);
         help.getItems().add(aboutProgram);
 
-        menuBar = new MenuBar(file, edit, format, view, help);
+        menuBar = new MenuBar(file, textManager.getMenu(), format, view, help);
 
         vBox = new VBox(menuBar, textArea);
 
-        VBox.setVgrow(textArea, Priority.ALWAYS);
+        VBox.setVgrow(textManager.getTextArea(), Priority.ALWAYS);
 
         primaryScene = new Scene(vBox);
     }
