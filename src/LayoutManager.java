@@ -1,4 +1,3 @@
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -22,10 +21,16 @@ public class LayoutManager {
         stage.setTitle(title + " — Блокнот");
     }
 
+    void setImage(String imagePath) {
+        stage.getIcons().add(FileManager.readImage(imagePath));
+    }
+
     MenuItem makeCreate() {
         MenuItem create = new MenuItem("Создать");
         create.setOnAction(event -> {
+            ensureEmptiness();
             textArea.clear();
+            currentFile = null;
         });
         return create;
     }
@@ -33,11 +38,13 @@ public class LayoutManager {
     MenuItem makeOpen() {
         MenuItem open = new MenuItem("Открыть..");
         open.setOnAction(event -> {
+            ensureEmptiness();
             currentFile = FileManager.open(stage);
             List<String> fileContents = FileManager.readPath(currentFile);
             for (String line : fileContents) {
                 textArea.appendText(line + lineSeparator());
             }
+            setTitle(currentFile.getFileName().toString());
         });
         return open;
     }
@@ -65,7 +72,10 @@ public class LayoutManager {
     }
     MenuItem makeExit() {
         MenuItem exit = new MenuItem("Выход");
-        exit.setOnAction(event -> stage.close());
+        exit.setOnAction(event -> {
+            ensureEmptiness();
+            stage.close();
+        });
         return exit;
     }
     MenuItem makeUndo() {
@@ -97,5 +107,11 @@ public class LayoutManager {
         MenuItem highlightAll = new MenuItem("Выделить всё");
         highlightAll.setOnAction(event -> textArea.selectAll());
         return highlightAll;
+    }
+
+    void ensureEmptiness() {
+        if (!textArea.getText().isEmpty()) {
+            //TODO::initialize sub window
+        }
     }
 }

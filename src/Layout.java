@@ -15,7 +15,7 @@ class Layout {
 
     private LayoutManager layoutManager;
     TextArea textArea;
-
+    private final String imagePath = "resources/np.png";
 
     Layout(Stage stage) {
         textArea = new TextArea();
@@ -23,14 +23,15 @@ class Layout {
 
         MenuBar menuBar = constructMenuBar();
 
-
         VBox vBox = new VBox(menuBar, textArea);
 
         VBox.setVgrow(textArea, Priority.ALWAYS);
 
         stage.setScene(new Scene(vBox));
 
-        stage.setTitle("Безымянный");
+        layoutManager.setTitle("Безымянный");
+
+        layoutManager.setImage(imagePath);
     }
 
     private MenuBar constructMenuBar() {
