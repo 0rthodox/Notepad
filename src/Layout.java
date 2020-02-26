@@ -14,9 +14,9 @@ import java.io.FileNotFoundException;
 class Layout {
 
     private LayoutManager layoutManager;
-    TextArea textArea;
+    private TextArea textArea;
     private final String imagePath = "resources/np.png";
-    SubStagesHolder subStagesHolder;
+    private SubStagesHolder subStagesHolder;
 
     Layout(Stage stage, SubStagesHolder subStagesHolder) {
         this.subStagesHolder = subStagesHolder;
@@ -32,8 +32,8 @@ class Layout {
         stage.setScene(new Scene(vBox));
 
         layoutManager.setTitle("Безымянный");
-
         layoutManager.setImage(imagePath);
+        layoutManager.handleClosing(subStagesHolder);
     }
 
     private MenuBar constructMenuBar() {
@@ -49,55 +49,4 @@ class Layout {
 
         return new MenuBar(file, edit);
     }
-
-    Layout() {
-       /* create.setOnAction(event -> {
-            if (!textArea.getText().isEmpty()) {
-                NotepadPlus.showPopUpStage(PopUpStage.constructPopUpStage(currentFile, textArea));
-            }
-        });
-        saveAs.setOnAction(event -> FileManager.saveToNew(textManager.getText()));
-        save.setOnAction(event -> {
-            if (currentFile == null) {
-                currentFile = FileManager.saveToNew(textManager.getText());
-                syncronizeStage();
-            } else {
-                FileManager.saveToExisting(currentFile, textManager.getText());
-            }
-        });
-        open.setOnAction(event -> {
-            currentFile = FileManager.open();
-            List<String> fileContents = FileManager.readPath(currentFile);
-            for (String line : fileContents) {
-                textManager.getTextArea().appendText(line + lineSeparator());
-            }
-        });
-
-        exit.setOnAction(event -> NotepadPlus.terminate());
-
-        file.getItems().add(create);
-        file.getItems().add(open);
-        file.getItems().add(save);
-        file.getItems().add(saveAs);
-        //file.getItems().add(pageParams);
-        //file.getItems().add(print);
-        file.getItems().add(exit);
-
-        //format.getItems().add(hyphenation);
-        format.getItems().add(font);
-
-        view.getItems().add(conditionString);
-
-        help.getItems().add(viewHelp);
-        help.getItems().add(aboutProgram);
-
-        menuBar = new MenuBar(file, textManager.getMenu(), format, view, help);
-
-        vBox = new VBox(menuBar, textArea);
-
-        VBox.setVgrow(textManager.getTextArea(), Priority.ALWAYS);
-
-        primaryScene = new Scene(vBox);*/
-    }
-
 }

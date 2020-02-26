@@ -10,19 +10,18 @@ import javafx.stage.Stage;
 
 import java.nio.file.Path;
 
-public class SubStagesHolder {
-    Stage saveStage;
+class SubStagesHolder {
+    private Stage saveStage;
     private final int paddingAndSpacing = 20;
 
-    public SubStagesHolder(Stage saveStage) {
+    SubStagesHolder(Stage saveStage) {
         this.saveStage = saveStage;
     }
 
-    public void makeSaveStage(Path filePath, TextArea textArea) {
+    void makeSaveStage(Path filePath, TextArea textArea) {
         SaveStageManager saveStageManager = new SaveStageManager(filePath, saveStage, textArea);
-        saveStage.initModality(Modality.APPLICATION_MODAL);
         Label label = new Label("Сохранить изменения в файле " + "\"" + processFileName(filePath) + "\"?" );
-        label.setPadding(new Insets(0, 2 * paddingAndSpacing, 2 * paddingAndSpacing, 0));
+        label.setPadding(new Insets(0, paddingAndSpacing, paddingAndSpacing, 0));
 
         HBox hBox = new HBox(saveStageManager.makeSave(),
                 saveStageManager.makeNotSave(), saveStageManager.makeDismiss());
@@ -34,9 +33,10 @@ public class SubStagesHolder {
         saveStage.setScene(scene);
         saveStage.setTitle("Блокнот");
         saveStage.show();
+
     }
 
-    String processFileName(Path filePath) {
+    private String processFileName(Path filePath) {
         if (filePath == null) {
             return "Безымянный";
         } else {

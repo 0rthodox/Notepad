@@ -7,12 +7,13 @@ import java.util.List;
 
 import static java.lang.System.lineSeparator;
 
-public class LayoutManager {
-    Stage stage;
-    TextArea textArea;
-    Path currentFile = null;
+class LayoutManager {
+    private Stage stage;
+    private TextArea textArea;
+    private Path currentFile = null;
+    private String textCondition = new String();
 
-    public LayoutManager(Stage stage, TextArea textArea) {
+    LayoutManager(Stage stage, TextArea textArea) {
         this.stage = stage;
         this.textArea = textArea;
     }
@@ -27,20 +28,26 @@ public class LayoutManager {
 
     MenuItem makeCreate(SubStagesHolder subStagesHolder) {
         MenuItem create = new MenuItem("Создать");
-        create.setOnAction(event -> ensureEmptiness(subStagesHolder));
+        create.setOnAction(event -> {
+            ensureRightCondition(subStagesHolder);
+            setTitle("Безымянный");
+        });
         return create;
     }
 
     MenuItem makeOpen(SubStagesHolder subStagesHolder) {
         MenuItem open = new MenuItem("Открыть..");
         open.setOnAction(event -> {
-            ensureEmptiness(subStagesHolder);
+            ensureRightCondition(subStagesHolder);
             currentFile = FileManager.open(stage);
             List<String> fileContents = FileManager.readPath(currentFile);
             for (String line : fileContents) {
                 textArea.appendText(line + lineSeparator());
             }
             setTitle(currentFile.getFileName().toString());
+            updateTextCondition();
+            setTitle("Безымянный");
+
         });
         return open;
     }
@@ -54,6 +61,7 @@ public class LayoutManager {
                 currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
                 setTitle(currentFile.getFileName().toString());
             }
+            updateTextCondition();
         });
         return save;
     }
@@ -63,13 +71,14 @@ public class LayoutManager {
         saveAs.setOnAction(event -> {
             currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
             setTitle(currentFile.getFileName().toString());
+            updateTextCondition();
         });
         return saveAs;
     }
     MenuItem makeExit(SubStagesHolder subStagesHolder) {
         MenuItem exit = new MenuItem("Выход");
         exit.setOnAction(event -> {
-            ensureEmptiness(subStagesHolder);
+            ensureRightCondition(subStagesHolder);
             stage.close();
         });
         return exit;
@@ -105,12 +114,18 @@ public class LayoutManager {
         return highlightAll;
     }
 
-    void ensureEmptiness(SubStagesHolder subStagesHolder) {
-        if (!textArea.getText().isEmpty()) {
-            //TODO::initialize sub window
+    private void ensureRightCondition(SubStagesHolder subStagesHolder) {
+        if (!textArea.getText().equals(textCondition)) {
             subStagesHolder.makeSaveStage(currentFile, textArea);
         } else {
             currentFile = null;
         }
+    }
+
+    void handleClosing(SubStagesHolder subStagesHolder) {
+        stage.setOnCloseRequest(event -> ensureRightCondition(subStagesHolder));
+    }
+    private void updateTextCondition() {
+        textCondition = textArea.getText();
     }
 }
