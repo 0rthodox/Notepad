@@ -16,8 +16,10 @@ class Layout {
     private LayoutManager layoutManager;
     TextArea textArea;
     private final String imagePath = "resources/np.png";
+    SubStagesHolder subStagesHolder;
 
-    Layout(Stage stage) {
+    Layout(Stage stage, SubStagesHolder subStagesHolder) {
+        this.subStagesHolder = subStagesHolder;
         textArea = new TextArea();
         layoutManager = new LayoutManager(stage, textArea);
 
@@ -38,9 +40,9 @@ class Layout {
         Menu file = new Menu("Файл");
         Menu edit = new Menu("Правка");
 
-        file.getItems().addAll(layoutManager.makeCreate(),
-                layoutManager.makeOpen(), layoutManager.makeSave(),
-                layoutManager.makeSaveAs(), layoutManager.makeExit());
+        file.getItems().addAll(layoutManager.makeCreate(subStagesHolder),
+                layoutManager.makeOpen(subStagesHolder), layoutManager.makeSave(),
+                layoutManager.makeSaveAs(), layoutManager.makeExit(subStagesHolder));
         edit.getItems().addAll(layoutManager.makeUndo(), layoutManager.makeCut(),
                 layoutManager.makeCopy(), layoutManager.makePaste(),
                 layoutManager.makeDelete(), layoutManager.makeHighlightAll());

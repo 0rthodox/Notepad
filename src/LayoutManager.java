@@ -25,20 +25,16 @@ public class LayoutManager {
         stage.getIcons().add(FileManager.readImage(imagePath));
     }
 
-    MenuItem makeCreate() {
+    MenuItem makeCreate(SubStagesHolder subStagesHolder) {
         MenuItem create = new MenuItem("Создать");
-        create.setOnAction(event -> {
-            ensureEmptiness();
-            textArea.clear();
-            currentFile = null;
-        });
+        create.setOnAction(event -> ensureEmptiness(subStagesHolder));
         return create;
     }
 
-    MenuItem makeOpen() {
+    MenuItem makeOpen(SubStagesHolder subStagesHolder) {
         MenuItem open = new MenuItem("Открыть..");
         open.setOnAction(event -> {
-            ensureEmptiness();
+            ensureEmptiness(subStagesHolder);
             currentFile = FileManager.open(stage);
             List<String> fileContents = FileManager.readPath(currentFile);
             for (String line : fileContents) {
@@ -70,10 +66,10 @@ public class LayoutManager {
         });
         return saveAs;
     }
-    MenuItem makeExit() {
+    MenuItem makeExit(SubStagesHolder subStagesHolder) {
         MenuItem exit = new MenuItem("Выход");
         exit.setOnAction(event -> {
-            ensureEmptiness();
+            ensureEmptiness(subStagesHolder);
             stage.close();
         });
         return exit;
@@ -109,9 +105,12 @@ public class LayoutManager {
         return highlightAll;
     }
 
-    void ensureEmptiness() {
+    void ensureEmptiness(SubStagesHolder subStagesHolder) {
         if (!textArea.getText().isEmpty()) {
             //TODO::initialize sub window
+            subStagesHolder.makeSaveStage(currentFile, textArea);
+        } else {
+            currentFile = null;
         }
     }
 }
