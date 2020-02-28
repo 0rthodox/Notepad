@@ -1,3 +1,5 @@
+package fileIO;
+
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -9,8 +11,8 @@ import java.util.List;
 
 import static java.lang.System.lineSeparator;
 
-class FileManager {
-    static Path saveToNew(Stage stage, String text) {
+public class FileManager {
+    public static Path saveToNew(Stage stage, String text) {
         text = text.replaceAll("\n", lineSeparator());
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Txt files", "*.txt");
@@ -19,19 +21,19 @@ class FileManager {
         saveToExisting(currentPath, text);
         return currentPath;
     }
-    static void saveToExisting(Path path, String text) {
+    public static void saveToExisting(Path path, String text) {
         try (BufferedWriter ostream = new BufferedWriter(new FileWriter(path.toFile()))){
             ostream.write(text);
         } catch (IOException ioEx) {
             throw new UncheckedIOException(ioEx);
         }
     }
-    static Path open(Stage stage) {
+    public static Path open(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         return fileChooser.showOpenDialog(stage).toPath();
     }
 
-    static List<String> readPath(Path currentPath) {
+    public static List<String> readPath(Path currentPath) {
         List<String> readLines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(currentPath.toFile()))){
             while (reader.ready()) {
@@ -42,7 +44,7 @@ class FileManager {
         }
         return readLines;
     }
-    static Image readImage(String imagePath) {
+    public static Image readImage(String imagePath) {
         try {
             FileInputStream inputImageStream = new FileInputStream(imagePath);
             return new Image(inputImageStream);

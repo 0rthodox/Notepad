@@ -1,15 +1,18 @@
+package alert;
+
+import fileIO.FileManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import java.nio.file.Path;
 
-public class SaveStageManager {
+public class AlertWindowModel {
     private Path filePath;
     private Stage stage;
     private TextArea textArea;
 
-    SaveStageManager(Path filePath, Stage stage, TextArea textArea) {
+    AlertWindowModel(Path filePath, Stage stage, TextArea textArea) {
         this.filePath = filePath;
         this.stage = stage;
         this.textArea = textArea;

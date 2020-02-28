@@ -1,3 +1,4 @@
+import alert.AlertWindow;
 import javafx.application.Application;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -7,8 +8,8 @@ public class Notepad extends Application {
     public void start(Stage primaryStage) {
         Stage saveStage = new Stage();
         saveStage.initModality(Modality.APPLICATION_MODAL);
-        SubStagesHolder subStagesHolder = new SubStagesHolder(saveStage);
-        new Layout(primaryStage, subStagesHolder);
+        AlertWindow alertWindow = new AlertWindow(saveStage);
+        new NotepadView(primaryStage, alertWindow);
         primaryStage.show();
     }
 }

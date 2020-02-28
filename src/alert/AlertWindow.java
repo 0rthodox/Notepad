@@ -1,30 +1,32 @@
+package alert;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.nio.file.Path;
 
-class SubStagesHolder {
+public class AlertWindow {
     private Stage saveStage;
     private final int paddingAndSpacing = 20;
 
-    SubStagesHolder(Stage saveStage) {
+    public AlertWindow(Stage saveStage) {
         this.saveStage = saveStage;
+//        saveStage.initOwner();
     }
 
-    void makeSaveStage(Path filePath, TextArea textArea) {
-        SaveStageManager saveStageManager = new SaveStageManager(filePath, saveStage, textArea);
+    public void makeSaveStage(Path filePath, TextArea textArea) {
+        AlertWindowModel alertWindowModel = new AlertWindowModel(filePath, saveStage, textArea);
         Label label = new Label("Сохранить изменения в файле " + "\"" + processFileName(filePath) + "\"?" );
+        //TODO: add stringbuilder
         label.setPadding(new Insets(0, paddingAndSpacing, paddingAndSpacing, 0));
 
-        HBox hBox = new HBox(saveStageManager.makeSave(),
-                saveStageManager.makeNotSave(), saveStageManager.makeDismiss());
+        HBox hBox = new HBox(alertWindowModel.makeSave(),
+                alertWindowModel.makeNotSave(), alertWindowModel.makeDismiss());
         hBox.setSpacing(paddingAndSpacing);
         VBox vBox = new VBox(label, hBox);
         vBox.setPadding(new Insets(paddingAndSpacing));

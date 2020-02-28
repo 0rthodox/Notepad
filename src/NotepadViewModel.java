@@ -1,3 +1,5 @@
+import alert.AlertWindow;
+import fileIO.FileManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -10,13 +12,13 @@ import java.util.List;
 
 import static java.lang.System.lineSeparator;
 
-class LayoutManager {
+class NotepadViewModel {
     private Stage stage;
     private TextArea textArea;
     private Path currentFile = null;
     private String textCondition = "";
 
-    LayoutManager(Stage stage, TextArea textArea) {
+    NotepadViewModel(Stage stage, TextArea textArea) {
         this.stage = stage;
         this.textArea = textArea;
     }
@@ -29,28 +31,30 @@ class LayoutManager {
         stage.getIcons().add(FileManager.readImage(imagePath));
     }
 
-    MenuItem makeCreate(SubStagesHolder subStagesHolder) {
+    MenuItem makeCreate(AlertWindow alertWindow) {
         MenuItem create = new MenuItem("Создать");
         create.setOnAction(event -> {
-            ensureRightCondition(subStagesHolder);
+            ensureRightCondition(alertWindow);
             setTitle("Безымянный");
         });
         create.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_ANY));
         return create;
     }
 
-    MenuItem makeOpen(SubStagesHolder subStagesHolder) {
+    MenuItem makeOpen(AlertWindow alertWindow) {
         MenuItem open = new MenuItem("Открыть..");
         open.setOnAction(event -> {
-            ensureRightCondition(subStagesHolder);
+            ensureRightCondition(alertWindow);
             currentFile = FileManager.open(stage);
-            List<String> fileContents = FileManager.readPath(currentFile);
-            for (String line : fileContents) {
-                textArea.appendText(line + lineSeparator());
+            if (currentFile != null) {
+                List<String> fileContents = FileManager.readPath(currentFile);
+                for (String line : fileContents) {
+                    textArea.appendText(line + lineSeparator());
+                }
+                setTitle(currentFile.getFileName().toString());
             }
-            setTitle(currentFile.getFileName().toString());
             updateTextCondition();
-            setTitle("Безымянный");
+            setTitle(currentFile.getFileName().toString());
         });
         open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_ANY));
         return open;
@@ -80,10 +84,10 @@ class LayoutManager {
         });
         return saveAs;
     }
-    MenuItem makeExit(SubStagesHolder subStagesHolder) {
+    MenuItem makeExit(AlertWindow alertWindow) {
         MenuItem exit = new MenuItem("Выход");
         exit.setOnAction(event -> {
-            ensureRightCondition(subStagesHolder);
+            ensureRightCondition(alertWindow);
             stage.close();
         });
         exit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.CONTROL_ANY));
@@ -126,16 +130,16 @@ class LayoutManager {
         return highlightAll;
     }
 
-    private void ensureRightCondition(SubStagesHolder subStagesHolder) {
+    private void ensureRightCondition(AlertWindow alertWindow) {
         if (!textArea.getText().equals(textCondition)) {
-            subStagesHolder.makeSaveStage(currentFile, textArea);
+            alertWindow.makeSaveStage(currentFile, textArea);
         } else {
             currentFile = null;
         }
     }
 
-    void handleClosing(SubStagesHolder subStagesHolder) {
-        stage.setOnCloseRequest(event -> ensureRightCondition(subStagesHolder));
+    void handleClosing(AlertWindow alertWindow) {
+        stage.setOnCloseRequest(event -> ensureRightCondition(alertWindow));
     }
     private void updateTextCondition() {
         textCondition = textArea.getText();
