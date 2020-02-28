@@ -14,8 +14,8 @@ class NotepadView {
     private final String imagePath = "resources/np.png";
     private AlertWindow alertWindow;
 
-    NotepadView(Stage stage, AlertWindow alertWindow) {
-        this.alertWindow = alertWindow;
+    NotepadView(Stage stage) {
+        alertWindow = new AlertWindow(stage);
         textArea = new TextArea();
         notepadViewModel = new NotepadViewModel(stage, textArea);
 

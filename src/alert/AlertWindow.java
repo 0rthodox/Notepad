@@ -11,18 +11,17 @@ import javafx.stage.Stage;
 import java.nio.file.Path;
 
 public class AlertWindow {
-    private Stage saveStage;
+    private Stage saveStage = new Stage();
     private final int paddingAndSpacing = 20;
 
-    public AlertWindow(Stage saveStage) {
-        this.saveStage = saveStage;
-//        saveStage.initOwner();
+    public AlertWindow(Stage stage) {
+        saveStage.initOwner(stage);
     }
 
     public void makeSaveStage(Path filePath, TextArea textArea) {
         AlertWindowModel alertWindowModel = new AlertWindowModel(filePath, saveStage, textArea);
-        Label label = new Label("Сохранить изменения в файле " + "\"" + processFileName(filePath) + "\"?" );
-        //TODO: add stringbuilder
+        Label label = new Label(new StringBuilder().append("Сохранить изменения в файле ").append('\"')
+                .append(processFileName(filePath)).append("\"?").toString());
         label.setPadding(new Insets(0, paddingAndSpacing, paddingAndSpacing, 0));
 
         HBox hBox = new HBox(alertWindowModel.makeSave(),

@@ -6,10 +6,7 @@ import javafx.stage.Stage;
 public class Notepad extends Application {
     @Override
     public void start(Stage primaryStage) {
-        Stage saveStage = new Stage();
-        saveStage.initModality(Modality.APPLICATION_MODAL);
-        AlertWindow alertWindow = new AlertWindow(saveStage);
-        new NotepadView(primaryStage, alertWindow);
+        new NotepadView(primaryStage);
         primaryStage.show();
     }
 }

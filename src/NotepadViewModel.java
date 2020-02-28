@@ -34,7 +34,8 @@ class NotepadViewModel {
     MenuItem makeCreate(AlertWindow alertWindow) {
         MenuItem create = new MenuItem("Создать");
         create.setOnAction(event -> {
-            ensureRightCondition(alertWindow);
+            ensureSaved(alertWindow);
+            textArea.clear();
             setTitle("Безымянный");
         });
         create.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_ANY));
@@ -44,9 +45,11 @@ class NotepadViewModel {
     MenuItem makeOpen(AlertWindow alertWindow) {
         MenuItem open = new MenuItem("Открыть..");
         open.setOnAction(event -> {
-            ensureRightCondition(alertWindow);
-            currentFile = FileManager.open(stage);
-            if (currentFile != null) {
+            Path openedFile = FileManager.open(stage);
+            if (openedFile != null) {
+                ensureSaved(alertWindow);
+                currentFile = openedFile;
+                textArea.clear();
                 List<String> fileContents = FileManager.readPath(currentFile);
                 for (String line : fileContents) {
                     textArea.appendText(line + lineSeparator());
@@ -87,7 +90,7 @@ class NotepadViewModel {
     MenuItem makeExit(AlertWindow alertWindow) {
         MenuItem exit = new MenuItem("Выход");
         exit.setOnAction(event -> {
-            ensureRightCondition(alertWindow);
+            ensureSaved(alertWindow);
             stage.close();
         });
         exit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.CONTROL_ANY));
@@ -130,7 +133,7 @@ class NotepadViewModel {
         return highlightAll;
     }
 
-    private void ensureRightCondition(AlertWindow alertWindow) {
+    private void ensureSaved(AlertWindow alertWindow) {
         if (!textArea.getText().equals(textCondition)) {
             alertWindow.makeSaveStage(currentFile, textArea);
         } else {
@@ -139,7 +142,7 @@ class NotepadViewModel {
     }
 
     void handleClosing(AlertWindow alertWindow) {
-        stage.setOnCloseRequest(event -> ensureRightCondition(alertWindow));
+        stage.setOnCloseRequest(event -> ensureSaved(alertWindow));
     }
     private void updateTextCondition() {
         textCondition = textArea.getText();
