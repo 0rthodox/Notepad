@@ -9,8 +9,8 @@ import java.util.List;
 
 import static java.lang.System.lineSeparator;
 
-public class FileManager {
-    public static Path saveToNew(Stage stage, String text) {
+class FileManager {
+    static Path saveToNew(Stage stage, String text) {
         text = text.replaceAll("\n", lineSeparator());
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Txt files", "*.txt");
@@ -19,20 +19,19 @@ public class FileManager {
         saveToExisting(currentPath, text);
         return currentPath;
     }
-    public static void saveToExisting(Path path, String text) {
+    static void saveToExisting(Path path, String text) {
         try (BufferedWriter ostream = new BufferedWriter(new FileWriter(path.toFile()))){
             ostream.write(text);
         } catch (IOException ioEx) {
             throw new UncheckedIOException(ioEx);
         }
     }
-    public static Path open(Stage stage) {
+    static Path open(Stage stage) {
         FileChooser fileChooser = new FileChooser();
-        Path currentPath = fileChooser.showOpenDialog(stage).toPath();
-        return currentPath;
+        return fileChooser.showOpenDialog(stage).toPath();
     }
 
-    public static List<String> readPath(Path currentPath) {
+    static List<String> readPath(Path currentPath) {
         List<String> readLines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(currentPath.toFile()))){
             while (reader.ready()) {
@@ -43,7 +42,7 @@ public class FileManager {
         }
         return readLines;
     }
-    public static Image readImage(String imagePath) {
+    static Image readImage(String imagePath) {
         try {
             FileInputStream inputImageStream = new FileInputStream(imagePath);
             return new Image(inputImageStream);

@@ -5,11 +5,11 @@ import javafx.stage.Stage;
 import java.nio.file.Path;
 
 public class SaveStageManager {
-    Path filePath;
-    Stage stage;
-    TextArea textArea;
+    private Path filePath;
+    private Stage stage;
+    private TextArea textArea;
 
-    public SaveStageManager(Path filePath, Stage stage, TextArea textArea) {
+    SaveStageManager(Path filePath, Stage stage, TextArea textArea) {
         this.filePath = filePath;
         this.stage = stage;
         this.textArea = textArea;
