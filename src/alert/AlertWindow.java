@@ -3,45 +3,36 @@ package alert;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.nio.file.Path;
+import notepadview.NotepadViewModel;
 
 public class AlertWindow {
-    private Stage saveStage = new Stage();
-    private final int paddingAndSpacing = 20;
+    private Stage alertWindow = new Stage();
+    private static int PADDING_AND_SPACING = 20;
+    public AlertWindow(NotepadViewModel notepadViewModel) {
+        alertWindow.initOwner(notepadViewModel.getStage());
+        alertWindow.initModality(Modality.WINDOW_MODAL);
 
-    public AlertWindow(Stage stage) {
-        saveStage.initOwner(stage);
-    }
+        AlertWindowModel alertWindowModel = new AlertWindowModel(notepadViewModel, alertWindow);
 
-    public void makeSaveStage(Path filePath, TextArea textArea) {
-        AlertWindowModel alertWindowModel = new AlertWindowModel(filePath, saveStage, textArea);
-        Label label = new Label(new StringBuilder().append("Сохранить изменения в файле ").append('\"')
-                .append(processFileName(filePath)).append("\"?").toString());
-        label.setPadding(new Insets(0, paddingAndSpacing, paddingAndSpacing, 0));
+        Label label = new Label("Сохранить изменения в файле " + '\"' +
+                notepadViewModel.fileName() + "\"?");
+
+        label.setPadding(new Insets(0, PADDING_AND_SPACING, PADDING_AND_SPACING, 0));
 
         HBox hBox = new HBox(alertWindowModel.makeSave(),
                 alertWindowModel.makeNotSave(), alertWindowModel.makeDismiss());
-        hBox.setSpacing(paddingAndSpacing);
+        hBox.setSpacing(PADDING_AND_SPACING);
         VBox vBox = new VBox(label, hBox);
-        vBox.setPadding(new Insets(paddingAndSpacing));
-        vBox.setSpacing(paddingAndSpacing);
+        vBox.setPadding(new Insets(PADDING_AND_SPACING));
+        vBox.setSpacing(PADDING_AND_SPACING);
+
         Scene scene = new Scene(vBox);
-        saveStage.setScene(scene);
-        saveStage.setTitle("Блокнот");
-        saveStage.show();
-
-    }
-
-    private String processFileName(Path filePath) {
-        if (filePath == null) {
-            return "Безымянный";
-        } else {
-            return filePath.getFileName().toString();
-        }
+        alertWindow.setScene(scene);
+        alertWindow.setTitle("Блокнот");
+        alertWindow.show();
     }
 }

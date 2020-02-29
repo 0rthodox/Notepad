@@ -1,6 +1,5 @@
 package notepadview;
 
-import alert.AlertWindow;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -14,10 +13,8 @@ public class NotepadView {
     private NotepadViewModel notepadViewModel;
     private TextArea textArea;
     private final String imagePath = "resources/np.png";
-    private AlertWindow alertWindow;
 
     public NotepadView(Stage stage) {
-        alertWindow = new AlertWindow(stage);
         textArea = new TextArea();
         notepadViewModel = new NotepadViewModel(stage, textArea);
 
@@ -31,7 +28,7 @@ public class NotepadView {
 
         notepadViewModel.setTitle("Безымянный");
         notepadViewModel.setImage(imagePath);
-        notepadViewModel.handleClosing(alertWindow);
+        notepadViewModel.handleClosing();
     }
 
     private MenuBar constructMenuBar() {

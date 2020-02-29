@@ -1,7 +1,6 @@
 package notepadview;
 
 import alert.AlertWindow;
-import alert.NewAlertWindow;
 import fileIO.FileManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -21,7 +20,6 @@ public class NotepadViewModel {
     private TextArea textArea;
     private Path currentFile = null;
     private String loggedText = "";
-    boolean locked = false;
 
     public Stage getStage() {
         return stage;
@@ -44,7 +42,7 @@ public class NotepadViewModel {
         MenuItem create = new MenuItem("Создать");
         create.setOnAction(event -> {
             if (modified()) {
-                new NewAlertWindow(this);
+                new AlertWindow(this);
             } else {
                 resetCondition();
             }
@@ -115,7 +113,7 @@ public class NotepadViewModel {
         return highlightAll;
     }
 
-    void handleClosing(AlertWindow alertWindow) {
+    void handleClosing() {
         stage.setOnCloseRequest(event -> {
             exit();
             event.consume();
@@ -128,18 +126,18 @@ public class NotepadViewModel {
         }
         return currentFile.getFileName().toString();
     }
-    void updateTitle() {
+    private void updateTitle() {
         stage.setTitle(fileName() + " — Блокнот");
     }
 
-    boolean modified() {
+    private boolean modified() {
         return !loggedText.equals(textArea.getText());
     }
 
-    void logText() {
+    private void logText() {
         loggedText = textArea.getText();
     }
-    void updateCondition() {
+    private void updateCondition() {
         logText();
         updateTitle();
     }
@@ -150,7 +148,7 @@ public class NotepadViewModel {
         updateCondition();
     }
 
-    void refill(List<String> contents) {
+    private void refill(List<String> contents) {
         textArea.clear();
         for (String line : contents) {
             textArea.appendText(line + lineSeparator());
@@ -165,27 +163,15 @@ public class NotepadViewModel {
             saveAs();
         }
     }
-    public void saveAs() {
+    private void saveAs() {
         currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
         setTitle(currentFile.getFileName().toString());
         updateCondition();
     }
-    void lock() {
-        locked = true;
-    }
-    public void unlock() {
-        locked = false;
-    }
-
-    void ensureSaved() {
-        if (modified()) {
-            new NewAlertWindow(this);
-        }
-    }
 
     private void open() {
         if (modified()) {
-            new NewAlertWindow(this);
+            new AlertWindow(this);
         } else {
             Path openedFile = FileManager.open(stage);
             if (openedFile != null) {
@@ -197,9 +183,9 @@ public class NotepadViewModel {
 
     }
 
-    void exit() {
+    private void exit() {
         if (modified()) {
-            new NewAlertWindow(this);
+            new AlertWindow(this);
         } else {
             stage.close();
         }

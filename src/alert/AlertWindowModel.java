@@ -1,33 +1,24 @@
 package alert;
 
-import fileIO.FileManager;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import notepadview.NotepadViewModel;
 
-import java.nio.file.Path;
 
 public class AlertWindowModel {
-    private Path filePath;
+    private NotepadViewModel notepadViewModel;
     private Stage stage;
-    private TextArea textArea;
 
-    AlertWindowModel(Path filePath, Stage stage, TextArea textArea) {
-        this.filePath = filePath;
+    AlertWindowModel(NotepadViewModel notepadViewModel, Stage stage) {
+        this.notepadViewModel = notepadViewModel;
         this.stage = stage;
-        this.textArea = textArea;
     }
 
     Button makeSave() {
         Button save = new Button("Сохранить");
         save.setOnAction(event -> {
-            if (filePath == null) {
-                FileManager.saveToNew(stage, textArea.getText());
-            } else {
-                FileManager.saveToExisting(filePath, textArea.getText());
-            }
-            textArea.clear();
-            filePath = null;
+            notepadViewModel.save();
+            notepadViewModel.resetCondition();
             stage.close();
         });
         return save;
@@ -35,16 +26,16 @@ public class AlertWindowModel {
     Button makeNotSave() {
         Button notSave = new Button("Не сохранять");
         notSave.setOnAction(event -> {
-            textArea.clear();
-            filePath = null;
+            notepadViewModel.resetCondition();
             stage.close();
         });
         return notSave;
     }
     Button makeDismiss() {
         Button dismiss = new Button("Отмена");
-        dismiss.setOnAction(event -> stage.close());
+        dismiss.setOnAction(event -> {
+            stage.close();
+        });
         return dismiss;
     }
-
 }
