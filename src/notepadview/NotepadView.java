@@ -1,3 +1,5 @@
+package notepadview;
+
 import alert.AlertWindow;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -7,14 +9,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-class NotepadView {
+public class NotepadView {
 
     private NotepadViewModel notepadViewModel;
     private TextArea textArea;
     private final String imagePath = "resources/np.png";
     private AlertWindow alertWindow;
 
-    NotepadView(Stage stage) {
+    public NotepadView(Stage stage) {
         alertWindow = new AlertWindow(stage);
         textArea = new TextArea();
         notepadViewModel = new NotepadViewModel(stage, textArea);
@@ -36,7 +38,7 @@ class NotepadView {
         Menu file = new Menu("Файл");
         Menu edit = new Menu("Правка");
 
-        file.getItems().addAll(notepadViewModel.makeCreate(alertWindow),
+        file.getItems().addAll(notepadViewModel.makeCreate(),
                 notepadViewModel.makeOpen(alertWindow), notepadViewModel.makeSave(),
                 notepadViewModel.makeSaveAs(), notepadViewModel.makeExit(alertWindow));
         edit.getItems().addAll(notepadViewModel.makeUndo(), notepadViewModel.makeCut(),

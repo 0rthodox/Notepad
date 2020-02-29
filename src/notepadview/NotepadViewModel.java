@@ -1,4 +1,7 @@
+package notepadview;
+
 import alert.AlertWindow;
+import alert.NewAlertWindow;
 import fileIO.FileManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -12,11 +15,17 @@ import java.util.List;
 
 import static java.lang.System.lineSeparator;
 
-class NotepadViewModel {
+public class NotepadViewModel {
+
     private Stage stage;
     private TextArea textArea;
     private Path currentFile = null;
-    private String textCondition = "";
+    private String loggedText = "";
+    boolean alertLock = false;
+
+    public Stage getStage() {
+        return stage;
+    }
 
     NotepadViewModel(Stage stage, TextArea textArea) {
         this.stage = stage;
@@ -31,12 +40,14 @@ class NotepadViewModel {
         stage.getIcons().add(FileManager.readImage(imagePath));
     }
 
-    MenuItem makeCreate(AlertWindow alertWindow) {
+    MenuItem makeCreate() {
         MenuItem create = new MenuItem("Создать");
         create.setOnAction(event -> {
-            ensureSaved(alertWindow);
-            textArea.clear();
-            setTitle("Безымянный");
+            if (modified()) {
+                new NewAlertWindow(this);
+            } else {
+                resetCondition();
+            }
         });
         create.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_ANY));
         return create;
@@ -49,15 +60,9 @@ class NotepadViewModel {
             if (openedFile != null) {
                 ensureSaved(alertWindow);
                 currentFile = openedFile;
-                textArea.clear();
-                List<String> fileContents = FileManager.readPath(currentFile);
-                for (String line : fileContents) {
-                    textArea.appendText(line + lineSeparator());
-                }
-                setTitle(currentFile.getFileName().toString());
+                refill(FileManager.readPath(currentFile));
+                updateCondition();
             }
-            updateTextCondition();
-            setTitle(currentFile.getFileName().toString());
         });
         open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_ANY));
         return open;
@@ -65,26 +70,14 @@ class NotepadViewModel {
 
     MenuItem makeSave() {
         MenuItem save = new MenuItem("Сохранить");
-        save.setOnAction(event -> {
-            if (currentFile != null) {
-                FileManager.saveToExisting(currentFile, textArea.getText());
-            } else {
-                currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
-                setTitle(currentFile.getFileName().toString());
-            }
-            updateTextCondition();
-        });
+        save.setOnAction(event -> save());
         save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_ANY));
         return save;
     }
 
     MenuItem makeSaveAs() {
         MenuItem saveAs = new MenuItem("Сохранить как..");
-        saveAs.setOnAction(event -> {
-            currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
-            setTitle(currentFile.getFileName().toString());
-            updateTextCondition();
-        });
+        saveAs.setOnAction(event -> saveAs());
         return saveAs;
     }
     MenuItem makeExit(AlertWindow alertWindow) {
@@ -134,7 +127,7 @@ class NotepadViewModel {
     }
 
     private void ensureSaved(AlertWindow alertWindow) {
-        if (!textArea.getText().equals(textCondition)) {
+        if (!textArea.getText().equals(loggedText)) {
             alertWindow.makeSaveStage(currentFile, textArea);
         } else {
             currentFile = null;
@@ -144,7 +137,59 @@ class NotepadViewModel {
     void handleClosing(AlertWindow alertWindow) {
         stage.setOnCloseRequest(event -> ensureSaved(alertWindow));
     }
-    private void updateTextCondition() {
-        textCondition = textArea.getText();
+
+    public String fileName() {
+        if (currentFile == null) {
+            return "Безымянный";
+        }
+        return currentFile.getFileName().toString();
+    }
+    void updateTitle() {
+        stage.setTitle(fileName() + " — Блокнот");
+    }
+
+    boolean modified() {
+        return !loggedText.equals(textArea.getText());
+    }
+
+    void logText() {
+        loggedText = textArea.getText();
+    }
+    void updateCondition() {
+        logText();
+        updateTitle();
+    }
+
+    public void resetCondition() {
+        textArea.clear();
+        currentFile = null;
+        updateCondition();
+    }
+
+    void refill(List<String> contents) {
+        textArea.clear();
+        for (String line : contents) {
+            textArea.appendText(line + lineSeparator());
+        }
+    }
+
+    public void save() {
+        if (currentFile != null) {
+            FileManager.saveToExisting(currentFile, textArea.getText());
+            logText();
+        } else {
+            saveAs();
+        }
+    }
+    public void saveAs() {
+        currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
+        setTitle(currentFile.getFileName().toString());
+        updateCondition();
+    }
+    void lock() {
+        alertLock = true;
+    }
+    public void unlock() {
+        alertLock = false;
     }
 }
