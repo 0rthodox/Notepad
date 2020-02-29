@@ -21,7 +21,7 @@ public class NotepadViewModel {
     private TextArea textArea;
     private Path currentFile = null;
     private String loggedText = "";
-    boolean alertLock = false;
+    boolean locked = false;
 
     public Stage getStage() {
         return stage;
@@ -53,17 +53,9 @@ public class NotepadViewModel {
         return create;
     }
 
-    MenuItem makeOpen(AlertWindow alertWindow) {
+    MenuItem makeOpen() {
         MenuItem open = new MenuItem("Открыть..");
-        open.setOnAction(event -> {
-            Path openedFile = FileManager.open(stage);
-            if (openedFile != null) {
-                ensureSaved(alertWindow);
-                currentFile = openedFile;
-                refill(FileManager.readPath(currentFile));
-                updateCondition();
-            }
-        });
+        open.setOnAction(event -> open());
         open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_ANY));
         return open;
     }
@@ -80,13 +72,10 @@ public class NotepadViewModel {
         saveAs.setOnAction(event -> saveAs());
         return saveAs;
     }
-    MenuItem makeExit(AlertWindow alertWindow) {
+    MenuItem makeExit() {
         MenuItem exit = new MenuItem("Выход");
-        exit.setOnAction(event -> {
-            ensureSaved(alertWindow);
-            stage.close();
-        });
-        exit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.CONTROL_ANY));
+        exit.setOnAction(event -> exit());
+        exit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_ANY));
         return exit;
     }
     MenuItem makeUndo() {
@@ -126,16 +115,11 @@ public class NotepadViewModel {
         return highlightAll;
     }
 
-    private void ensureSaved(AlertWindow alertWindow) {
-        if (!textArea.getText().equals(loggedText)) {
-            alertWindow.makeSaveStage(currentFile, textArea);
-        } else {
-            currentFile = null;
-        }
-    }
-
     void handleClosing(AlertWindow alertWindow) {
-        stage.setOnCloseRequest(event -> ensureSaved(alertWindow));
+        stage.setOnCloseRequest(event -> {
+            exit();
+            event.consume();
+        });
     }
 
     public String fileName() {
@@ -187,9 +171,37 @@ public class NotepadViewModel {
         updateCondition();
     }
     void lock() {
-        alertLock = true;
+        locked = true;
     }
     public void unlock() {
-        alertLock = false;
+        locked = false;
+    }
+
+    void ensureSaved() {
+        if (modified()) {
+            new NewAlertWindow(this);
+        }
+    }
+
+    private void open() {
+        if (modified()) {
+            new NewAlertWindow(this);
+        } else {
+            Path openedFile = FileManager.open(stage);
+            if (openedFile != null) {
+                currentFile = openedFile;
+                refill(FileManager.readPath(currentFile));
+                updateCondition();
+            }
+        }
+
+    }
+
+    void exit() {
+        if (modified()) {
+            new NewAlertWindow(this);
+        } else {
+            stage.close();
+        }
     }
 }

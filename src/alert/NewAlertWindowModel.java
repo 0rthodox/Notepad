@@ -21,7 +21,6 @@ public class NewAlertWindowModel {
         save.setOnAction(event -> {
             notepadViewModel.save();
             notepadViewModel.resetCondition();
-            notepadViewModel.unlock();
             stage.close();
         });
         return save;
@@ -30,7 +29,6 @@ public class NewAlertWindowModel {
         Button notSave = new Button("Не сохранять");
         notSave.setOnAction(event -> {
             notepadViewModel.resetCondition();
-            notepadViewModel.unlock();
             stage.close();
         });
         return notSave;
@@ -39,7 +37,6 @@ public class NewAlertWindowModel {
         Button dismiss = new Button("Отмена");
         dismiss.setOnAction(event -> {
             stage.close();
-            notepadViewModel.unlock();
         });
         return dismiss;
     }

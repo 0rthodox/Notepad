@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import notepadview.NotepadViewModel;
 
 public class NewAlertWindow {
@@ -15,6 +16,7 @@ public class NewAlertWindow {
     public NewAlertWindow(NotepadViewModel notepadViewModel) {
         alertWindow.initOwner(notepadViewModel.getStage());
         alertWindow.initModality(Modality.WINDOW_MODAL);
+
         NewAlertWindowModel newAlertWindowModel = new NewAlertWindowModel(notepadViewModel, alertWindow);
 
         Label label = new Label("Сохранить изменения в файле " + '\"' +

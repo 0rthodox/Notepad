@@ -39,8 +39,8 @@ public class NotepadView {
         Menu edit = new Menu("Правка");
 
         file.getItems().addAll(notepadViewModel.makeCreate(),
-                notepadViewModel.makeOpen(alertWindow), notepadViewModel.makeSave(),
-                notepadViewModel.makeSaveAs(), notepadViewModel.makeExit(alertWindow));
+                notepadViewModel.makeOpen(), notepadViewModel.makeSave(),
+                notepadViewModel.makeSaveAs(), notepadViewModel.makeExit());
         edit.getItems().addAll(notepadViewModel.makeUndo(), notepadViewModel.makeCut(),
                 notepadViewModel.makeCopy(), notepadViewModel.makePaste(),
                 notepadViewModel.makeDelete(), notepadViewModel.makeHighlightAll());
