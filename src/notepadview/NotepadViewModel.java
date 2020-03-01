@@ -14,7 +14,7 @@ public class NotepadViewModel {
 
     private Stage stage;
     private TextArea textArea;
-    private Path currentFile = null;
+    private Path currentFile;
     private String loggedText = "";
 
     public Stage getStage() {
@@ -30,16 +30,11 @@ public class NotepadViewModel {
         stage.getIcons().add(FileManager.readImage(imagePath));
     }
 
-
-
     public String fileName() {
         if (currentFile == null) {
             return "Безымянный";
         }
         return currentFile.getFileName().toString();
-    }
-    void updateTitle() {
-        stage.setTitle(fileName() + " — Блокнот");
     }
 
     boolean modified() {
@@ -81,6 +76,10 @@ public class NotepadViewModel {
         updateCondition();
     }
 
+    void updateTitle() {
+        stage.setTitle(fileName() + " — Блокнот");
+    }
+
     void open() {
         if (modified()) {
             new AlertWindow(this);
@@ -92,7 +91,6 @@ public class NotepadViewModel {
                 updateCondition();
             }
         }
-
     }
 
     void exit() {
