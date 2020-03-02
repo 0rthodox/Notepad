@@ -8,7 +8,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import utils.Answer;
 
 public class AlertWindow {
     private static int PADDING_AND_SPACING = 20;

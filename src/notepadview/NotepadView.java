@@ -1,6 +1,5 @@
 package notepadview;
 
-import alert.AlertWindow;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -25,7 +24,7 @@ public class NotepadView {
         textArea = new TextArea();
         notepadViewModel = new NotepadViewModel(stage, textArea);
 
-        MenuBar menuBar = constructMenuBar();
+        MenuBar menuBar = createMenuBar();
 
         VBox vBox = new VBox(menuBar, textArea);
 
@@ -38,82 +37,82 @@ public class NotepadView {
         handleClosing();
     }
 
-    private MenuBar constructMenuBar() {
+    private MenuBar createMenuBar() {
         Menu file = new Menu("Файл");
         Menu edit = new Menu("Правка");
 
-        file.getItems().addAll(makeCreate(),
-                makeOpen(), makeSave(),
-                makeSaveAs(), makeExit());
-        edit.getItems().addAll(makeUndo(), makeCut(),
-                makeCopy(), makePaste(),
-                makeDelete(), makeHighlightAll());
+        file.getItems().addAll(createNewButton(),
+                createOpenButton(), createSaveButton(),
+                createSaveAsButton(), createExitButton());
+        edit.getItems().addAll(createUndoButton(), createCutButton(),
+                createCopyButton(), createPasteButton(),
+                createDeleteButton(), createHighlightAllButton());
 
         return new MenuBar(file, edit);
     }
-    private MenuItem makeCreate() {
+    private MenuItem createNewButton() {
         MenuItem create = new MenuItem("Создать");
         create.setOnAction(event -> notepadViewModel.create());
         create.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_ANY));
         return create;
     }
 
-    private MenuItem makeOpen() {
+    private MenuItem createOpenButton() {
         MenuItem open = new MenuItem("Открыть..");
         open.setOnAction(event -> notepadViewModel.open());
         open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_ANY));
         return open;
     }
 
-    private MenuItem makeSave() {
+    private MenuItem createSaveButton() {
         MenuItem save = new MenuItem("Сохранить");
         save.setOnAction(event -> notepadViewModel.save());
         save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_ANY));
         return save;
     }
 
-    private MenuItem makeSaveAs() {
+    private MenuItem createSaveAsButton() {
         MenuItem saveAs = new MenuItem("Сохранить как..");
         saveAs.setOnAction(event -> notepadViewModel.saveAs());
         return saveAs;
     }
-    private MenuItem makeExit() {
+    private MenuItem createExitButton() {
         MenuItem exit = new MenuItem("Выход");
         exit.setOnAction(event -> notepadViewModel.exit());
         exit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_ANY));
         return exit;
     }
-    private MenuItem makeUndo() {
+    private MenuItem createUndoButton() {
         MenuItem undo = new MenuItem("Отменить");
         undo.setOnAction(event -> textArea.undo());
         undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_ANY));
         return undo;
     }
-    private MenuItem makeCut() {
+    private MenuItem createCutButton() {
         MenuItem cut = new MenuItem("Вырезать");
         cut.setOnAction(event -> textArea.cut());
         cut.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_ANY));
         return cut;
     }
-    private MenuItem makeCopy() {
+    private MenuItem createCopyButton() {
         MenuItem copy = new MenuItem("Копировать");
         copy.setOnAction(event -> textArea.copy());
         copy.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY));
         return copy;
     }
-    private MenuItem makePaste() {
+    private MenuItem createPasteButton() {
         MenuItem paste = new MenuItem("Вставить");
         paste.setOnAction(event -> textArea.paste());
         paste.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_ANY));
         return paste;
     }
-    private MenuItem makeDelete() {
+    private MenuItem createDeleteButton() {
         MenuItem delete = new MenuItem("Удалить");
         delete.setOnAction(event -> textArea.deleteText(textArea.getSelection()));
         delete.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
         return delete;
     }
-    private MenuItem makeHighlightAll() {
+    private MenuItem createHighlightAllButton() {
         MenuItem highlightAll = new MenuItem("Выделить всё");
         highlightAll.setOnAction(event -> textArea.selectAll());
         highlightAll.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_ANY));

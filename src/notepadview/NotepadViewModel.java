@@ -1,7 +1,8 @@
 package notepadview;
 
 import alert.AlertWindow;
-import utils.Answer;
+import alert.Answer;
+import javafx.stage.FileChooser;
 import utils.FileManager;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -104,6 +105,7 @@ public class NotepadViewModel {
                 if (answer.equals(Answer.YES)) {
                     save();
                 }
+                resetCondition();
                 openWithoutChecking();
             }
         } else {
@@ -112,7 +114,8 @@ public class NotepadViewModel {
     }
 
     private void openWithoutChecking() {
-        Path openedFile = FileManager.open(stage);
+        FileChooser fileChooser = new FileChooser();
+        Path openedFile = fileChooser.showOpenDialog(stage).toPath();
         if (openedFile != null) {
             currentFile = openedFile;
             refill(FileManager.readPath(currentFile));

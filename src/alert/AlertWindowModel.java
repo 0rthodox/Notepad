@@ -1,7 +1,6 @@
 package alert;
 
 import javafx.stage.Stage;
-import utils.Answer;
 
 
 class AlertWindowModel {

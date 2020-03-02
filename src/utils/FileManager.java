@@ -28,11 +28,6 @@ public class FileManager {
             throw new UncheckedIOException(ioEx);
         }
     }
-    public static Path open(Stage stage) {
-        FileChooser fileChooser = new FileChooser();
-        return fileChooser.showOpenDialog(stage).toPath();
-    }
-
     public static List<String> readPath(Path currentPath) {
         List<String> readLines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(currentPath.toFile()))){
