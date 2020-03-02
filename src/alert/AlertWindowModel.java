@@ -1,25 +1,31 @@
 package alert;
 
 import javafx.stage.Stage;
-import notepadview.NotepadViewModel;
+import utils.Answer;
 
 
 class AlertWindowModel {
-    private NotepadViewModel notepadViewModel;
     private Stage alertWindow;
+    private Answer answer;
 
-    AlertWindowModel(NotepadViewModel notepadViewModel, Stage alertWindow) {
-        this.notepadViewModel = notepadViewModel;
+    AlertWindowModel(Stage alertWindow) {
         this.alertWindow = alertWindow;
     }
 
-    void save() {
-        notepadViewModel.save();
-        resetAndClose();
+    void yes() {
+        answer = Answer.YES;
+        alertWindow.close();
     }
-    void resetAndClose() {
-        notepadViewModel.resetCondition();
+    void no() {
+        answer = Answer.NO;
+        alertWindow.close();
+    }
+    void dismiss() {
+        answer = Answer.DISMISS;
         alertWindow.close();
     }
 
+    Answer getAnswer() {
+        return answer;
+    }
 }

@@ -53,13 +53,7 @@ public class NotepadView {
     }
     private MenuItem makeCreate() {
         MenuItem create = new MenuItem("Создать");
-        create.setOnAction(event -> {
-            if (notepadViewModel.modified()) {
-                new AlertWindow(notepadViewModel);
-            } else {
-                notepadViewModel.resetCondition();
-            }
-        });
+        create.setOnAction(event -> notepadViewModel.create());
         create.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_ANY));
         return create;
     }

@@ -1,6 +1,7 @@
 package notepadview;
 
 import alert.AlertWindow;
+import utils.Answer;
 import utils.FileManager;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -30,14 +31,14 @@ public class NotepadViewModel {
         stage.getIcons().add(FileManager.readImage(imagePath));
     }
 
-    public String fileName() {
+    private String fileName() {
         if (currentFile == null) {
             return "Безымянный";
         }
         return currentFile.getFileName().toString();
     }
 
-    boolean modified() {
+    private boolean modified() {
         return !loggedText.equals(textArea.getText());
     }
 
@@ -49,10 +50,25 @@ public class NotepadViewModel {
         updateTitle();
     }
 
-    public void resetCondition() {
+    private void resetCondition() {
         textArea.clear();
         currentFile = null;
         updateCondition();
+    }
+
+    void create() {
+        if (modified()) {
+            AlertWindow alertWindow = new AlertWindow(stage, fileName());
+            Answer answer = alertWindow.getAnswer();
+            if (!answer.equals(Answer.DISMISS)) {
+                if (answer.equals(Answer.YES)) {
+                    save();
+                }
+                resetCondition();
+            }
+        } else {
+            resetCondition();
+        }
     }
 
     private void refill(List<String> contents) {
@@ -62,7 +78,7 @@ public class NotepadViewModel {
         }
     }
 
-    public void save() {
+    void save() {
         if (currentFile != null) {
             FileManager.saveToExisting(currentFile, textArea.getText());
             logText();
@@ -82,20 +98,38 @@ public class NotepadViewModel {
 
     void open() {
         if (modified()) {
-            new AlertWindow(this);
-        } else {
-            Path openedFile = FileManager.open(stage);
-            if (openedFile != null) {
-                currentFile = openedFile;
-                refill(FileManager.readPath(currentFile));
-                updateCondition();
+            AlertWindow alertWindow = new AlertWindow(stage, fileName());
+            Answer answer = alertWindow.getAnswer();
+            if (!answer.equals(Answer.DISMISS)) {
+                if (answer.equals(Answer.YES)) {
+                    save();
+                }
+                openWithoutChecking();
             }
+        } else {
+            openWithoutChecking();
+        }
+    }
+
+    private void openWithoutChecking() {
+        Path openedFile = FileManager.open(stage);
+        if (openedFile != null) {
+            currentFile = openedFile;
+            refill(FileManager.readPath(currentFile));
+            updateCondition();
         }
     }
 
     void exit() {
         if (modified()) {
-            new AlertWindow(this);
+            AlertWindow alertWindow = new AlertWindow(stage, fileName());
+            Answer answer = alertWindow.getAnswer();
+            if (!answer.equals(Answer.DISMISS)) {
+                if (answer.equals(Answer.YES)) {
+                    save();
+                }
+                stage.close();
+            }
         } else {
             stage.close();
         }
