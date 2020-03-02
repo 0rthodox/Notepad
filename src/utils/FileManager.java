@@ -12,16 +12,7 @@ import java.util.List;
 import static java.lang.System.lineSeparator;
 
 public class FileManager {
-    public static Path saveToNew(Stage stage, String text) {
-        text = text.replaceAll("\n", lineSeparator());
-        FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Txt files", "*.txt");
-        fileChooser.getExtensionFilters().add(extensionFilter);
-        Path currentPath = fileChooser.showSaveDialog(stage).toPath();
-        saveToExisting(currentPath, text);
-        return currentPath;
-    }
-    public static void saveToExisting(Path path, String text) {
+    public static void save(Path path, String text) {
         try (BufferedWriter ostream = new BufferedWriter(new FileWriter(path.toFile()))){
             ostream.write(text);
         } catch (IOException ioEx) {

@@ -2,6 +2,7 @@ package notepadview;
 
 import alert.AlertWindow;
 import alert.Answer;
+import javafx.application.Platform;
 import javafx.stage.FileChooser;
 import utils.FileManager;
 import javafx.scene.control.TextArea;
@@ -81,14 +82,22 @@ public class NotepadViewModel {
 
     void save() {
         if (currentFile != null) {
-            FileManager.saveToExisting(currentFile, textArea.getText());
+            FileManager.save(currentFile, textArea.getText());
             logText();
         } else {
             saveAs();
         }
     }
     void saveAs() {
-        currentFile = FileManager.saveToNew(stage, textArea.getText()).getFileName();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Txt files", "*.txt");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        Path openedFile = fileChooser.showSaveDialog(stage).toPath();
+        if (openedFile != null) {
+            currentFile = openedFile;
+            FileManager.save(currentFile,
+                    textArea.getText().replaceAll("\n", lineSeparator()));
+        }
         updateTitle();
         updateCondition();
     }
@@ -131,10 +140,10 @@ public class NotepadViewModel {
                 if (answer.equals(Answer.YES)) {
                     save();
                 }
-                stage.close();
+                Platform.exit();
             }
         } else {
-            stage.close();
+            Platform.exit();
         }
     }
 }
